@@ -20,10 +20,6 @@ public class MyRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Artist artist = artistRepository.findByArtistId(5);
-        System.out.println(artist.getName());
 
-        Album album = albumRepository.findByAlbumId(5);
-        System.out.println(album.getTitle());
     }
 }

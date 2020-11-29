@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Album implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int albumId;
+    private Integer albumId;
 
     @ManyToOne
     @JoinColumn(name = "artistId")

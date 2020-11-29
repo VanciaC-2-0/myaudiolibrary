@@ -12,7 +12,7 @@ import java.util.Set;
 public class Artist implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int artistId;
+    private Integer artistId;
 
     @OneToMany(mappedBy = "artist", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("artist")
