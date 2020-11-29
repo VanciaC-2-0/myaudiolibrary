@@ -41,6 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return " La propriété " + e.getPropertyName() + " n'existe pas!";
     }
 
+    //Erreur 409
     @ExceptionHandler(EntityExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleEntityExistException(EntityExistsException e){

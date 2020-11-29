@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.swing.text.html.Option;
 import java.util.Optional;
@@ -54,6 +56,11 @@ public class ArtistController {
 
     /**
      * Permet de récupérer les artistes de manière paginée et triée
+     * @param page Numéro de la page en partant de 0
+     * @param size Taille de la page
+     * @param sortDirection Tri ascendant ASC ou descendant DESC
+     * @param sortProperty Propriété utilisée par le tri
+     * @return Une page contenant les artistes
      */
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public Page<Artist> findAll(
@@ -74,5 +81,15 @@ public class ArtistController {
             throw new IllegalArgumentException("Le paramètre sortDirection doit valoir ASC ou DESC");
         }
         return artistRepository.findAll(pageRequest);
+    }
+
+    //creation nouvel artiste
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public Artist createEmploye(@RequestBody Artist artist){
+        if(artistRepository.findByName(artist.getName()) != null){
+            throw new EntityExistsException("Il y a déja un artiste de nom" + artist.getName());
+        }
+        return artistRepository.save(artist);
     }
 }
