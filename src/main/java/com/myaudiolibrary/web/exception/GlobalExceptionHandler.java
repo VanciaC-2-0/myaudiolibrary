@@ -38,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(PropertyReferenceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handlePropertyReferenceException(PropertyReferenceException e){
-        return " La propriété" + e.getPropertyName() + " n'existe pas!";
+        return " La propriété " + e.getPropertyName() + " n'existe pas!";
     }
 
     @ExceptionHandler(EntityExistsException.class)
