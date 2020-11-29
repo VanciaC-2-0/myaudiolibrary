@@ -101,4 +101,14 @@ public class ArtistController {
         }
         return artistRepository.save(artist);
     }
+
+    //Suppression artiste
+    @RequestMapping(value ="/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)//204
+    public void deleteArtist(@PathVariable Integer id){
+        if(!artistRepository.existsById(id)){
+            throw new EntityNotFoundException("L'artiste d'identifiant " + id + " n'a pas été trouvé");
+        }
+        artistRepository.deleteById(id);
+    }
 }
