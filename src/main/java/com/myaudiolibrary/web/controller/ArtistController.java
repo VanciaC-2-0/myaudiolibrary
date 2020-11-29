@@ -86,9 +86,18 @@ public class ArtistController {
     //creation nouvel artiste
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Artist createEmploye(@RequestBody Artist artist){
+    public Artist createArtist(@RequestBody Artist artist){
         if(artistRepository.findByName(artist.getName()) != null){
             throw new EntityExistsException("Il y a déja un artiste de nom" + artist.getName());
+        }
+        return artistRepository.save(artist);
+    }
+
+    //modif artiste
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Artist updateArtist(@PathVariable Integer id, @RequestBody Artist artist){
+        if(!artistRepository.existsById(id)){
+            throw new EntityNotFoundException("L'artiste d'identifiant " + id + " n'a pas été trouvé");
         }
         return artistRepository.save(artist);
     }
