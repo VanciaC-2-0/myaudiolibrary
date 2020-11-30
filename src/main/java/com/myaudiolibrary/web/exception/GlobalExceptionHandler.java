@@ -14,21 +14,18 @@ import javax.persistence.EntityNotFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    //erreur 404
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleEntityNotFoundException(EntityNotFoundException e){
         return e.getMessage();
     }
 
-    //erreur 400
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleIllegalArgumentException(IllegalArgumentException e){
         return e.getMessage();
     }
 
-    //Si l'argument est mauvais, ex int != string (X n'est pas un nombre)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
@@ -41,7 +38,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return " La propriété " + e.getPropertyName() + " n'existe pas!";
     }
 
-    //Erreur 409
     @ExceptionHandler(EntityExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleEntityExistException(EntityExistsException e){

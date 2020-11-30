@@ -3,30 +3,35 @@ package com.myaudiolibrary.web.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "artist")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Artist implements Serializable {
+public class Artist{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "artistId")
+    @Column(name = "ArtistId")
     private Integer id;
 
-    @OneToMany(mappedBy = "artist", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("artist")
     private Set<Album> albums = new HashSet<>();
 
+    @Column(name = "Name")
     private String name;
 
     public Artist(){
 
     }
 
-    public Artist(Set<Album> albums) {
-        this.albums = albums;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Set<Album> getAlbums() {

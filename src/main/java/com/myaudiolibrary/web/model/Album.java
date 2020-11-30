@@ -1,19 +1,20 @@
 package com.myaudiolibrary.web.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-public class Album implements Serializable {
+@Table(name = "album")
+public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "albumId")
+    @Column(name = "AlbumId")
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "artistId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ArtistId")
     private Artist artist;
 
+    @Column(name = "Title")
     private String title;
 
     public Album(){
@@ -34,5 +35,13 @@ public class Album implements Serializable {
 
     public void setArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

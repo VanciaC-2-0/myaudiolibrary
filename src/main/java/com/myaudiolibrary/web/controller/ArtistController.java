@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequestMapping("/artists")
 public class ArtistController {
     @Autowired
-    ArtistRepository artistRepository;
+    private ArtistRepository artistRepository;
 
     /**
      * Permet de récupérer un artiste à partir de son identifiant
@@ -44,14 +44,25 @@ public class ArtistController {
      * @param name Le nom de l'artiste
      * @return l'artiste si le nom est trouvé, sinon une erreur
      */
-    @RequestMapping(value = "", params = {"name"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Artist searchByName(@RequestParam("name") String name){
-        Artist artist = artistRepository.findByName(name);
-        if(artist == null){
-            throw new EntityNotFoundException("L'artiste " + name + " n'a pas été trouvé");
+    @RequestMapping(params = {"name"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Page <Artist> getByName(@RequestParam(value = "name") String name,
+                                   @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                   @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                   @RequestParam(value = "sortProperty", defaultValue = "name") String sortProperty,
+                                   @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(sortDirection), sortProperty);
+        if (page < 0) {
+            //400
+            throw new IllegalArgumentException("Le paramètre page doit être positif ou nul !");
         }
-        return artist;
+        if (size <= 0 || size > 50) {
+            throw new IllegalArgumentException("Le paramètre size doit être compris entre 0 et 50");
+        }
+        if (!"ASC".equalsIgnoreCase(sortDirection) && !"DESC".equalsIgnoreCase(sortDirection)) {
+            throw new IllegalArgumentException("Le paramètre sortDirection doit valoir ASC ou DESC");
+        }
+        Page<Artist> listPageArtist= artistRepository.findAllByNameContaining(name, pageRequest);
+        return listPageArtist;
     }
 
     /**
@@ -69,7 +80,7 @@ public class ArtistController {
             @RequestParam(value = "sortProperty", defaultValue = "name") String sortProperty,
             @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection) {
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(sortDirection), sortProperty);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(sortDirection), sortProperty);
         if (page < 0) {
             //400
             throw new IllegalArgumentException("Le paramètre page doit être positif ou nul !");
@@ -88,7 +99,7 @@ public class ArtistController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public Artist createArtist(@RequestBody Artist artist){
         if(artistRepository.findByName(artist.getName()) != null){
-            throw new EntityExistsException("Il y a déja un artiste de nom" + artist.getName());
+            throw new EntityExistsException("Il y a déja un artiste de nom " + artist.getName());
         }
         return artistRepository.save(artist);
     }
