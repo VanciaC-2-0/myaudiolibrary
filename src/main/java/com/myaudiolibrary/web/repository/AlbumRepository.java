@@ -5,5 +5,5 @@ import com.myaudiolibrary.web.model.Artist;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlbumRepository extends JpaRepository<Album, Integer> {
-    Album findByArtist(Artist artist);
+    Album findByTitle(String title);
 }
