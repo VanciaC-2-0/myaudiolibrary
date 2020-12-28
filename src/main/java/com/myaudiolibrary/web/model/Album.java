@@ -1,6 +1,7 @@
 package com.myaudiolibrary.web.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "album")
@@ -43,5 +44,29 @@ public class Album {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Album album = (Album) o;
+        return id.equals(album.id) &&
+                artist.equals(album.artist) &&
+                title.equals(album.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, artist, title);
+    }
+
+    @Override
+    public String toString() {
+        return "Album{" +
+                "id=" + id +
+                ", artist=" + artist +
+                ", title='" + title + '\'' +
+                '}';
     }
 }
