@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "artist")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Artist{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,26 +51,17 @@ public class Artist{
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Artist artist = (Artist) o;
-        return id.equals(artist.id) &&
-                albums.equals(artist.albums) &&
-                name.equals(artist.name);
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, albums, name);
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     @Override
     public String toString() {
-        return "Artist{" +
-                "id=" + id +
-                ", albums=" + albums +
-                ", name='" + name + '\'' +
-                '}';
+        return super.toString();
     }
 }

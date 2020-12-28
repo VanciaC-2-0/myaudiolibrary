@@ -19,7 +19,7 @@ public class AlbumController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Album addAlbum(@RequestBody Album album){
-        if(albumRepository.findByTitle(album.getTitle()) != null){
+        if(albumRepository.existsByTitle(album.getTitle())){
             throw new EntityExistsException("Il y a déja un album de nom " + album.getTitle());
         }
         return albumRepository.save(album);

@@ -29,7 +29,6 @@ public class ArtistController {
      * @return l'artiste si l'identifiant est trouvé, sinon erreur 404.
      */
     @RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    @ResponseBody
     public Optional<Artist> getArtist(@PathVariable(value = "id") Integer id){
         Optional<Artist> optionalArtist = artistRepository.findById(id);
         if (optionalArtist.isPresent()){

@@ -11,7 +11,7 @@ public class Album {
     @Column(name = "AlbumId")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "ArtistId")
     private Artist artist;
 
@@ -47,26 +47,17 @@ public class Album {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Album album = (Album) o;
-        return id.equals(album.id) &&
-                artist.equals(album.artist) &&
-                title.equals(album.title);
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, artist, title);
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     @Override
     public String toString() {
-        return "Album{" +
-                "id=" + id +
-                ", artist=" + artist +
-                ", title='" + title + '\'' +
-                '}';
+        return super.toString();
     }
 }
