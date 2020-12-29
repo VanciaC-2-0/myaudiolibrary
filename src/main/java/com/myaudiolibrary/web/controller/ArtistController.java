@@ -29,13 +29,54 @@ public class ArtistController {
     private ArtistRepository artistRepository;
 
     @GetMapping(value= "/{id}")
-    public String getArtist(final ModelMap model, @PathVariable("id") Integer id){
+    public String getArtistById(final ModelMap model, @PathVariable("id") Integer id){
         Optional<Artist> optionalArtist = artistRepository.findById(id);
         model.put("artist", optionalArtist.get());
         model.put("albumToCreate", new Album());
         return "detailArtist";
     }
 
+    @GetMapping(value = "", params = "name")
+    public String getByName(final ModelMap model,
+                             @RequestParam(value ="name") String name,
+                             @RequestParam(value = "page", defaultValue = "0") Integer page,
+                             @RequestParam(value = "size", defaultValue = "10") Integer size,
+                             @RequestParam(value = "sortProperty", defaultValue = "name") String sortProperty,
+                             @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(sortDirection), sortProperty);
+        Page<Artist> pageArtist = artistRepository.findAllByNameContaining(name, pageRequest);
+        model.put("size", size);
+        model.put("sortProperty", sortProperty);
+        model.put("sortDirection", sortDirection);
+        model.put("pageNumber", page + 1);
+        model.put("previousPage", page - 1);
+        model.put("nextPage", page + 1);
+        model.put("start", page * size + 1);
+        model.put("end", (page)*size + pageArtist.getNumberOfElements());
+        model.put("artists", pageArtist);
+        return "listeArtists";
+    }
+
+    @GetMapping(value="")
+    public String getListArtist(final ModelMap model,
+                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                      @RequestParam(value = "sortProperty", defaultValue = "name") String sortProperty,
+                                      @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(sortDirection), sortProperty);
+        Page<Artist> pageArtist = artistRepository.findAll(pageRequest);
+        model.put("size", size);
+        model.put("sortProperty", sortProperty);
+        model.put("sortDirection", sortDirection);
+        model.put("pageNumber", page + 1);
+        model.put("previousPage", page - 1);
+        model.put("nextPage", page + 1);
+        model.put("start", page * size + 1);
+        model.put("end", (page)*size + pageArtist.getNumberOfElements());
+        model.put("artists", pageArtist);
+        return "listeArtists";
+
+    }
     /*
 
     /**
