@@ -7,15 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 //@CrossOrigin
@@ -28,6 +25,7 @@ public class ArtistController {
     @Autowired
     private ArtistRepository artistRepository;
 
+    //search by ID
     @GetMapping(value= "/{id}")
     public String getArtistById(final ModelMap model, @PathVariable("id") Integer id){
         Optional<Artist> optionalArtist = artistRepository.findById(id);
@@ -36,6 +34,7 @@ public class ArtistController {
         return "detailArtist";
     }
 
+    //search by name
     @GetMapping(value = "", params = "name")
     public String getByName(final ModelMap model,
                              @RequestParam(value ="name") String name,
@@ -57,6 +56,7 @@ public class ArtistController {
         return "listeArtists";
     }
 
+    //listArtist
     @GetMapping(value="")
     public String getListArtist(final ModelMap model,
                                       @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -75,7 +75,24 @@ public class ArtistController {
         model.put("end", (page)*size + pageArtist.getNumberOfElements());
         model.put("artists", pageArtist);
         return "listeArtists";
+    }
 
+    //add new artist
+    @GetMapping(value = "/new")
+    public String newArtist(final ModelMap model){
+        model.put("artist", new Artist());
+        model.put("album", new Album());
+        return "detailArtist";
+    }
+
+    @PostMapping(value = "/addArtist", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public RedirectView createOrSaveArtist(Artist artist){
+        return saveArtist(artist);
+    }
+
+    private RedirectView saveArtist(Artist artist){
+        artist = artistRepository.save(artist);
+        return new RedirectView("/artists/" + artist.getId());
     }
     /*
 
