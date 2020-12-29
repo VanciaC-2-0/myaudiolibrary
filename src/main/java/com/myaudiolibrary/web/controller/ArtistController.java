@@ -13,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 //@CrossOrigin
@@ -29,6 +30,9 @@ public class ArtistController {
     @GetMapping(value= "/{id}")
     public String getArtistById(final ModelMap model, @PathVariable("id") Integer id){
         Optional<Artist> optionalArtist = artistRepository.findById(id);
+        if(optionalArtist.isEmpty()){
+            throw new EntityNotFoundException("L'artiste d'identifiant " + id + " n'a pas été trouvé !");
+        }
         model.put("artist", optionalArtist.get());
         model.put("albumToCreate", new Album());
         return "detailArtist";
@@ -85,6 +89,7 @@ public class ArtistController {
         return "detailArtist";
     }
 
+    //form submit
     @PostMapping(value = "/addArtist", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView createOrSaveArtist(Artist artist){
         return saveArtist(artist);
@@ -94,6 +99,17 @@ public class ArtistController {
         artist = artistRepository.save(artist);
         return new RedirectView("/artists/" + artist.getId());
     }
+
+    //delete artist
+    @GetMapping(value = "/{id}/delete")
+    public RedirectView deleteArtist(@PathVariable Integer id){
+        if(!artistRepository.existsById(id)){
+            throw new EntityNotFoundException("L'artiste d'identifiant " + id + " n'a pas été trouvé !");
+        }
+        artistRepository.deleteById(id);
+        return new RedirectView("/artists");
+    }
+
     /*
 
     /**
