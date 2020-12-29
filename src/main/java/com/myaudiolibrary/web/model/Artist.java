@@ -51,17 +51,26 @@ public class Artist{
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Artist artist = (Artist) o;
+        return Objects.equals(id, artist.id) &&
+                Objects.equals(albums, artist.albums) &&
+                Objects.equals(name, artist.name);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Objects.hash(id, albums, name);
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Artist{" +
+                "id=" + id +
+                ", albums=" + albums +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

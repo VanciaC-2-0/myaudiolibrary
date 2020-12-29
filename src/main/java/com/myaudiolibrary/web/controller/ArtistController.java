@@ -1,5 +1,6 @@
 package com.myaudiolibrary.web.controller;
 
+import com.myaudiolibrary.web.model.Album;
 import com.myaudiolibrary.web.model.Artist;
 import com.myaudiolibrary.web.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
@@ -15,12 +18,25 @@ import javax.persistence.EntityNotFoundException;
 import javax.swing.text.html.Option;
 import java.util.Optional;
 
-@CrossOrigin
-@RestController
-@RequestMapping("/artists")
+//@CrossOrigin
+//@RestController
+@Controller
+@RequestMapping(value= "/artists")
 public class ArtistController {
+
+
     @Autowired
     private ArtistRepository artistRepository;
+
+    @GetMapping(value= "/{id}")
+    public String getArtist(final ModelMap model, @PathVariable("id") Integer id){
+        Optional<Artist> optionalArtist = artistRepository.findById(id);
+        model.put("artist", optionalArtist.get());
+        model.put("albumToCreate", new Album());
+        return "detailArtist";
+    }
+
+    /*
 
     /**
      * Permet de récupérer un artiste à partir de son identifiant
@@ -28,6 +44,7 @@ public class ArtistController {
      * @param id Identifiant de l'artiste
      * @return l'artiste si l'identifiant est trouvé, sinon erreur 404.
      */
+    /*
     @RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public Optional<Artist> getArtist(@PathVariable(value = "id") Integer id){
         Optional<Artist> optionalArtist = artistRepository.findById(id);
@@ -43,6 +60,7 @@ public class ArtistController {
      * @param name Le nom de l'artiste
      * @return l'artiste si le nom est trouvé, sinon une erreur
      */
+    /*
     @RequestMapping(params = {"name"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Page <Artist> getByName(@RequestParam(value = "name") String name,
                                    @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -72,6 +90,7 @@ public class ArtistController {
      * @param sortProperty Propriété utilisée par le tri
      * @return Une page contenant les artistes
      */
+    /*
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public Page<Artist> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -121,4 +140,5 @@ public class ArtistController {
         }
         artistRepository.deleteById(id);
     }
+     */
 }
