@@ -15,22 +15,20 @@
 						<input type="hidden" th:value="${artist.id}" name="id">
 						<label for="name" class="form-control-label">Nom</label>
 						<input type="text" name="name" id="name" class="ember-text-field form-control ember-view" th:value="${artist.name}">
-
-
-						<label class="form-control-label">Albums</label>
-						<div class="row" th:each="album : ${artist.albums}">
-							<div class="col-lg-10">
-								<div class="list-group">
-									<li class="list-group-item">&nbsp[[${album.title}]]</li>
-								</div>
-							</div>
-							<div class="col-lg-2 text-center">
-								<div class="list-group text-center">
-									<button class="btn-danger list-group-item list-group-item-action"><span class="glyphicon glyphicon-remove"></span></button>
-								</div>
+					</form>
+					<label class="form-control-label">Albums</label>
+					<div class="row" th:each="album : ${artist.albums}">
+						<div class="col-lg-10">
+							<div class="list-group">
+								<li class="list-group-item">&nbsp[[${album.title}]]</li>
 							</div>
 						</div>
-					</form>
+						<div class="col-lg-2 text-center">
+							<div class="list-group text-center">
+								<a th:href="'/albums/'+${album.id}" class="btn-danger list-group-item list-group-item-action"><span class="glyphicon glyphicon-remove"></span></button></a>
+							</div>
+						</div>
+					</div>
 					<div class="row">
 						<form id="saveAlbum" th:action="'/albums'" method="POST">
 							<input name="artist" type="hidden" th:value="${artist.id}">

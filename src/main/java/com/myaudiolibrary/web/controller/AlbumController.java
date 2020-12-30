@@ -14,6 +14,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 //@CrossOrigin
 //@RestController
@@ -24,17 +25,29 @@ public class AlbumController {
     @Autowired
     private AlbumRepository albumRepository;
 
+
+    //add album
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView createOrSaveAlbum(Album album, Artist artist){
-        if(albumRepository.existsByTitle(album.getTitle())){
-            throw new EntityExistsException("Il y a déja un album de nom " + album.getTitle());
-        }
         return saveAlbum(album, artist);
     }
 
     private RedirectView saveAlbum(Album album, Artist artist){
         albumRepository.save(album);
         return new RedirectView("/artists/" + artist.getId());
+    }
+
+    //delete album
+    @GetMapping(value = "/{id}")
+    public RedirectView deleteAlbum(@PathVariable(name = "id") Integer id){
+        if(!albumRepository.existsById(id)){
+            throw new EntityNotFoundException("L'album d'identifiant " + id + " n'a pas été trouvé");
+        }
+        //recupere l'id de l'artiste
+        Optional<Album> albumId = albumRepository.findById(id);
+        Integer artistId = albumId.get().getArtist().getId();
+        albumRepository.deleteById(id);
+        return new RedirectView("/artists/" + artistId);
     }
     /*
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

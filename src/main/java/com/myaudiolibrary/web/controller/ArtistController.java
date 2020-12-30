@@ -93,9 +93,6 @@ public class ArtistController {
     //form submit
     @PostMapping(value = "", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView createOrSaveArtist(Artist artist){
-        if(artistRepository.findByName(artist.getName()) != null){
-            throw new EntityExistsException("Il y a déja un artiste de nom " + artist.getName());
-        }
         return saveArtist(artist);
     }
 
@@ -106,10 +103,7 @@ public class ArtistController {
 
     //delete artist
     @GetMapping(value = "/{id}/delete")
-    public RedirectView deleteArtist(@PathVariable Integer id){
-        if(!artistRepository.existsById(id)){
-            throw new EntityNotFoundException("L'artiste d'identifiant " + id + " n'a pas été trouvé !");
-        }
+    public RedirectView deleteArtist(@PathVariable (name="id") Integer id){
         artistRepository.deleteById(id);
         return new RedirectView("/artists");
     }
