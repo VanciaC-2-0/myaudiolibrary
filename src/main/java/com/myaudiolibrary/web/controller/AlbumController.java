@@ -1,6 +1,7 @@
 package com.myaudiolibrary.web.controller;
 
 import com.myaudiolibrary.web.model.Album;
+import com.myaudiolibrary.web.model.Artist;
 import com.myaudiolibrary.web.repository.AlbumRepository;
 import com.myaudiolibrary.web.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,18 @@ public class AlbumController {
     @Autowired
     private AlbumRepository albumRepository;
 
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public RedirectView createOrSaveAlbum(Album album, Artist artist){
+        if(albumRepository.existsByTitle(album.getTitle())){
+            throw new EntityExistsException("Il y a déja un album de nom " + album.getTitle());
+        }
+        return saveAlbum(album, artist);
+    }
+
+    private RedirectView saveAlbum(Album album, Artist artist){
+        albumRepository.save(album);
+        return new RedirectView("/artists/" + artist.getId());
+    }
     /*
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Album addAlbum(@RequestBody Album album){

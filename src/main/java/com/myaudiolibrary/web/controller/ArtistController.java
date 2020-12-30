@@ -13,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
@@ -90,8 +91,11 @@ public class ArtistController {
     }
 
     //form submit
-    @PostMapping(value = "/addArtist", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView createOrSaveArtist(Artist artist){
+        if(artistRepository.findByName(artist.getName()) != null){
+            throw new EntityExistsException("Il y a déja un artiste de nom " + artist.getName());
+        }
         return saveArtist(artist);
     }
 
