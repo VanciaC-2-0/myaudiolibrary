@@ -3,21 +3,15 @@ package com.myaudiolibrary.web.controller;
 import com.myaudiolibrary.web.model.Album;
 import com.myaudiolibrary.web.model.Artist;
 import com.myaudiolibrary.web.repository.AlbumRepository;
-import com.myaudiolibrary.web.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
-//@CrossOrigin
-//@RestController
 @Controller
 @RequestMapping(value= "/albums")
 public class AlbumController {
@@ -26,9 +20,14 @@ public class AlbumController {
     private AlbumRepository albumRepository;
 
 
-    //add album
+    /**
+     *
+     * @param album
+     * @param artist
+     * @return la fonction de redirection quand l'album a été créer
+     */
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RedirectView createOrSaveAlbum(Album album, Artist artist){
+    public RedirectView createAlbum(Album album, Artist artist){
         return saveAlbum(album, artist);
     }
 
@@ -37,7 +36,11 @@ public class AlbumController {
         return new RedirectView("/artists/" + artist.getId());
     }
 
-    //delete album
+    /**
+     *
+     * @param id Id de l'album
+     * @return La suppression de l'album si l'ID est trouvé, sinon erreur 404
+     */
     @GetMapping(value = "/{id}")
     public RedirectView deleteAlbum(@PathVariable(name = "id") Integer id){
         if(!albumRepository.existsById(id)){
@@ -49,23 +52,4 @@ public class AlbumController {
         albumRepository.deleteById(id);
         return new RedirectView("/artists/" + artistId);
     }
-    /*
-    @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Album addAlbum(@RequestBody Album album){
-        if(albumRepository.existsByTitle(album.getTitle())){
-            throw new EntityExistsException("Il y a déja un album de nom " + album.getTitle());
-        }
-        return albumRepository.save(album);
-    }
-
-    @RequestMapping(value ="/{id}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)//204
-    public void deleteAlbum(@PathVariable Integer id){
-        if(!albumRepository.existsById(id)){
-            throw new EntityNotFoundException("L'album d'identifiant " + id + " n'a pas été trouvé");
-        }
-        albumRepository.deleteById(id);
-    }
-
-     */
 }

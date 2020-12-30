@@ -1,46 +1,26 @@
 package com.myaudiolibrary.web.exception;
 
-import org.springframework.data.mapping.PropertyReferenceException;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.EntityExistsException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.persistence.EntityNotFoundException;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
+@ControllerAdvice
+public class GlobalExceptionHandler{
+    /**
+     *
+     * @param e exception
+     * @return la vue erreur si une erreur 404
+     */
     @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleEntityNotFoundException(EntityNotFoundException e){
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleIllegalArgumentException(IllegalArgumentException e){
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
-        return "Le paramètre " + e.getName() + " a une valeur incorrecte : " + e.getValue();
-    }
-
-    @ExceptionHandler(PropertyReferenceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handlePropertyReferenceException(PropertyReferenceException e){
-        return " La propriété " + e.getPropertyName() + " n'existe pas!";
-    }
-
-    @ExceptionHandler(EntityExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleEntityExistException(EntityExistsException e){
-        return e.getMessage();
+    public ModelAndView handleEntityNotFoundException(EntityNotFoundException e){
+        ModelAndView modelAndView = new ModelAndView("error", HttpStatus.NOT_FOUND);
+        modelAndView.addObject("error", e.getMessage());
+        modelAndView.addObject("status", HttpStatus.NOT_FOUND);
+        return modelAndView;
     }
 }
